@@ -1,0 +1,475 @@
+CHESS:
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////     LAYER 0    //////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+- Setup the Game
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+- Play the Game X
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////     LAYER 1    //////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+SETUP THE GAME:
+    - Take in names for player1 and player2
+        - Assume player1 playing white, player2 playing black
+    - Set up the board(s)
+    
+    * LIKELY JUST DONE IN CONSTRUCTOR. INITIALIZE EVERYTHING
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+PLAY THE GAME:
+    - While the game is not over
+        - Current player takes turn
+        - Switch players
+    - Declare results
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////     LAYER 2    //////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+GAME IS OVER:
+    - Current person's king is now in checkmate or game is drawn X
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+CURRENT PLAYER TAKES TURN:
+    1. Show the current chess board X
+    2. Take in a move X
+    3. While move not valid, keep asking X
+      - I CHANGED IT SO MOVE CHECKS IF ITS VALID, NOT SOME FUNC. SEEMS LIKE THAT MAKES MORE SENSE
+    4. Execute the move X
+    5. Update every piece in the game as a result X
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+SWITCH PLAYER:
+    1. Switch current player to be the other player
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////     LAYER 3    //////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+KING IN CHECKMATE:
+    - King is in check
+      AND
+    - King has no possible squares to move
+      AND
+    - No piece can move to block or take attacker(s)
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+GAME IS A DRAW
+    - Stalemate
+      OR
+    - Insufficient material
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+TAKE IN A MOVE:
+    - Take in a string for piece location and desired location to move and create a move
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+MOVE VALID:
+    - Given piece location is valid
+      AND 
+    - Desired location is valid
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+EXECUTE THE MOVE:
+    - If it is a castling move
+        - If white
+          - If -2i for king desired, move king to -2i, rook to +3i
+          - If +2i for king desired, move king to +2i, rook to -2i
+        - If black
+          - If -2i for king desired, move king to -2i, rook to +2i
+          - If +2i for king desired, move king to +2i, rook to -3i
+    - If it is a promotion move
+        - Set the location of the pawn to the desired location and "turn it into" the desired piece
+    - If it is an en passant move
+        - Set the location of the pawn to behind the pawn that just moved up twice and remove ("take") that opposing pawn
+
+     - Else (it is just a "regular" move)
+        - Set the location of the moved piece to the desired location
+        - If an enemy piece was there, remove that piece
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+UPDATE EVERY PIECE AS A RESULT:
+    - For each player in the game
+        - For each piece in the game
+            - Update the piece's possible locations
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////     LAYER 4    //////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+KING IS IN CHECK:
+    - One of the enemy's pieces' possible moves is at the location of the king
+    (king is in the set of enemies attacked squares)
+    (or number of "checkers" is >0)
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+KING HAS NO POSSIBLE SQUARES TO MOVE:
+    - Number of possible moves is 0
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+NO PIECE CAN MOVE TO BLOCK OR TAKE ATTACKER:
+    - If number of "checkers" is >1, this must be true (since you can't take/block multiple checkers)
+    - Otherwise, if any piece on the allied side cannot move into the attacking line of the checker or take the checker,
+      this is true
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+KING IN STALEMATE:
+    - King is not in check
+      AND 
+    - No piece in the game (for the stalemated player) has any possible moves
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+INSUFFICIENT MATERIAL:
+    - If both sides have any one of the following, and there are no pawns on the board: 
+        A lone king 
+        a king and bishop
+        a king and knight
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+GIVEN PIECE LOCATION IS VALID:
+    - Person trying to make the move has a piece there
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+DESIRED LOCATION IS VALID:
+    - The desired location is equal to one of the locations in that piece's possible moves vector
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+IS CASTLING MOVE:
+    - If king (black or white) wants to move into -2i or +2i
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+IS PROMOTION MOVE:
+    - If pawn wants to move across the board
+        - (8th rank for white, 1st rank for black)
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+IS EN PASSANT MOVE:
+    - Pawn wants to move diagonally upwards (to right or left) but there is no pawn there, but it is a possible
+      move nonetheless
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+UPDATE THE PIECE'S POSSIBLE LOCATIONS:
+    - Create the "possible" moves of the piece
+    - Remove any moves that, after performing it, would put oneself in check
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////     LAYER 5    //////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+NUMBER OF CHECKERS >1:
+    - Check each piece on some side. If any of those pieces have a possible move at the king, they should be tracked
+      and known as a "checker"
+      * Pawn is not a problem since I don't let it have a possible move to somewhere where an enemy blocks. It doesn't
+        have a possible move "into" the king
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+ATTACKING LINE OF THE CHECKER (vector of squares):
+    * Take the location of your own king and the checker and deduce the "line" that allows the attack
+
+    - If the checker is a rook
+      - Either the i or j of the rook and king are the same.
+        - if i's the same, get all the squares with that i and all of the j's that connect
+        - if j's the same, get all the squares with that j and all of the i's that connect
+
+    - If the checker is a knight
+      - Attacking line is the knight's location ITSELF
+      * Knights don't really form "lines", just themselves
+
+    - If the checker is a bishop
+      - Bishop can be up-left, up-right, down-left, down-right of king it's checking
+        - up-left means -i, +j. So increment i + decrement j / get all those squares / reach king and stop
+        - up-right means +i, +j. So decrement i + decrement j / ..
+        - down-left means -i, -j. So increment i + increment j / ..
+        - down-right means +i, -j. So decrement i + increment j / ..
+
+    - If the checker is a queen
+      - Do it like rook and bishop, as one of those lines will match up
+
+      (maybe implement by having each thing be a function and just check:
+      for "rookish" part
+      - if i's of the piece and king are the same, do this
+      - else if j's of the piece and king are the same, do this
+      ^^^ WHICH MUST BE TRUE FOR A Rook
+      - else return
+      for "bishopish" part
+      - if up-left, up-right, etc.
+      )
+
+    - If the checker is a pawn
+      - can be up-left or up-right one piece
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+       
+CREATE THE POSSIBLE MOVES OF THE PIECE:
+    - Rook can go
+        +i OR -i OR +j OR -j
+        until it hits the end of the board or enemy piece or allied piece
+
+    - Knight can go
+      +i, +2j OR +2i, +j OR +2i, -j OR +i, -2j OR -i, -2j OR -2i, -j OR -2i, j OR -i, +2j
+      unless it hits an allied piece or goes off the board
+
+    - Bishop can go
+      +i, +j OR -i, -j OR -i, +j OR i, -j
+      until it hits an enemy piece or allied piece or goes off the board.
+
+    - Queen is like bishop and like rook
+
+    - King can go
+      +j OR +i, +j OR +i OR +i, -j OR -j OR -i, -j OR -i OR -i, +j
+      unless it hits an allied piece
+      OR
+
+      * castling rule
+      - +2i if castling conditions met
+      - -2i if castling conditions met
+      * +2i corresponds to short castle for white, -2i corresponds to short castle for black
+      * -2i corresponds to long castle for white, +2i corresponds to long castle for black
+
+
+    - Pawn can go
+      +j if there is no piece there
+      OR
+      +2j if hasn't moved before and there is no piece in between itself and that square and there is no piece there
+      OR
+      +i, +j only if there is an enemy there
+      OR
+      -i, +j only if there is an enemy there
+      OR
+      -i, +j if there is an enemy pawn to its left that, on the previous turn, moved up two squares
+      OR
+      +i, +j if there is an enemy pawn to its right that, on the previous turn, moved up two squares
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+REMOVE ANY MOVES THAT WOULD PUT ONESELF IN CHECK:
+  * Happens if a piece is pinned or if the king wants to move somewhere where it would put itself in check
+    - If current piece is the king, remove any move that is in the enemies set of attacking squares
+
+If the piece is a knight, I can just skip the following and remove all moves.
+    - All other piece types:
+    If pinned horizontally E, remove all movements that aren't strictly horizontal in that direction
+    If pinned horizontally W, remove all movements that aren't strictly horizontal in that direction
+    If pinned vertically N, remove all movements that aren't strictly vertical in that direction
+    If pinned vertically S, remove all movements that aren't strictly vertical in that direction
+
+If the piece is a rook (knight already taken care of), I can just skip the following and remove all moves.
+    If pinned diagonally NW, remove all movements that aren't diagonal in that direction
+    If pinned diagonally NE, remove all movements that aren't diagonal in that direction
+    If pinned diagonally SW, remove all movements that aren't diagonal in that direction
+    If pinned diagonally SE, remove all movements that aren't diagonal in that direction
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////     LAYER 6    //////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+CASTLING CONDITIONS MET:
+    - The king has not moved before
+    - The desired rook with which to castle hasn't moved before
+    - No piece is between that rook and the king
+    - No enemy piece is attacking the king's "castling route"
+    - The king is not in check
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+PINNED HORIZONTALLY:
+    - If pinned horizontally E
+      OR
+    - pinned horizontally W
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+PINNED VERTICALLY:
+    - If pinned vertically N
+      OR
+      pinned vertically S
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+PINNED DIAGONALLY NW:
+    - If some piece is attacked diagonally from NW
+      AND
+      attacking piece is not a king or pawn
+      AND
+      there are no pieces between itself and its king in the SE direction
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+PINNED DIAGONALLY NE:
+    - If some piece attacked diagonally from NE
+      AND
+      attacking piece is a bishop or queen
+      AND
+      there are no pieces between itself and its king in the SW direction
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+PINNED DIAGONALLY SW:
+    - If some piece attacked diagonally from SW
+      AND
+      attacking piece is not a king
+      AND
+      there are no pieces between itself and its king in the NE direction
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+PINNED DIAGONALLY SE:
+    - If some piece attacked diagonally from SE
+      AND
+      attacking piece is not a king
+      AND
+      there are no pieces between itself and its king in the NW direction
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+REMOVE ALL MOVEMENTS THAT AREN'T DIAGONAL IN THAT DIRECTION:
+    - If given location is NW
+      - remove all moves in which it was not +xi, +xj
+    - If given location is NE
+      - remove all moves in which it was not -xi, +xj
+    - If given location is SW
+      - remove all moves in which it was not -xi, -xj
+    - If given location is SE
+      - remove all moves in which it was not +xi, -xj
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////     LAYER 7    //////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+KING'S CASTLING ROUTE:
+    - If white short
+       - F1 or G1 under attack
+    - If white long
+       - D1 or C1 under attack
+    - If black short
+      - F8 or G8 under attack
+    - If black long
+      - D8 or C8 under attack
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+PINNED HORIZONTALLY E:
+    - If some piece attacked horizontally from the east
+      AND
+    - attacking piece is not a king
+      AND
+    - there are no pieces between itself and its own king in the W direction
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+PINNED HORIZONTALLY W:
+    - If some piece attacked horizontally from the west
+      AND
+    - attacking piece is not a king
+      AND 
+    - there are no pieces between itself and its own king in the E direction
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+PINNED VERTICALLY N:
+    - If some piece attacked vertically from the north
+      AND
+    - attacking piece is not a king
+      AND 
+    - there are no pieces between itself and its own king in the S direction
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+PINNED VERTICALLY S:
+    - If some piece attacked vertically from the south
+      AND
+    - attacking piece is not a king
+      AND 
+    - there are no pieces between itself and its own king in the N direction
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+ATTACKED DIAGONALLY NW:
+    - If there is an ENEMY piece as we increment up and to the right
+      AND
+    - if that attacking piece is a bishop or queen or king
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+ATTACKED DIAGONALLY NE:
+    - If there is an ENEMY piece as we increment up and to the left
+      AND
+    - if that attacking piece is a bishop or queen or king
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+ATTACKED DIAGONALLY SW:
+    - If there is an ENEMY piece as we increment down and to the left
+      AND
+    - if that attacking piece is a bishop or queen or king
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+ATTACKED DIAGONALLY SE:
+    - If there is an ENEMY piece as we increment down and to the right
+      AND
+    - if that attacking piece is a bishop or queen or king
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+NO PIECES BETWEEN ITSELF AND ITS KING IN X DIRECTION:
+    - Given the piece location and king location and direction, start at the piece location and increment toward the direction.
+    If it reaches the king without seeing any piece, this is true. Otherwise false. If it doesn't hit king at all until falls off board,
+    this is an invalid behavior.
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////     LAYER 8    //////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+ATTACKED HORIZONTALLY E:
+    - If there is an ENEMY piece as we increment to the left
+      AND
+    - that attacking piece is a queen or rook or king
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+ATTACKED HORIZONTALLY W:
+    - If there is an ENEMY piece as we increment to the right
+      AND
+    - that attacking piece is a queen or rook or king
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+ATTACKED VERTICALLY N:
+    - If there is an ENEMY piece as we increment up
+      AND
+    - that attacking piece is a queen or rook or king
+
+.     .     .     .     .     .     .     .     .     .     .     .     .     .     .     
+
+ATTACKED VERTICALLY S:
+    - If there is an ENEMY piece as we increment down
+      AND 
+    - that attacking piece is a queen or rook or king
+
